@@ -23,4 +23,8 @@ return [
     'Laminas\ZendFrameworkBridge',
     'Laminas\DeveloperTools',
     'Application',
+    'Acl',
+    'Components',
+    'Settings',
+    'User',
 ];

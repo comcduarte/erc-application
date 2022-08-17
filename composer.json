@@ -32,10 +32,7 @@
 		"psr-4" : {
 			"Application\\" : "module/Application/src/",
 			"Acl\\" : "module/Acl/src",
-			"Annotation\\" : "module/Annotation/src",
 			"Components\\" : "module/Components/src",
-			"Files\\" : "module/Files/src",
-			"Report\\" : "module/Report/src",
 			"Settings\\" : "module/Settings/src",
 			"User\\" : "module/User/src"
 		}

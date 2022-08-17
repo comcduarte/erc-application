@@ -33,9 +33,23 @@ return [
             ],
         ],
     ],
+    'acl' => [
+        'EVERYONE' => [
+            'home' => [],
+        ],
+    ],
     'controllers' => [
         'factories' => [
             Controller\IndexController::class => InvokableFactory::class,
+        ],
+    ],
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'label' => 'Home',
+                'route' => 'home',
+                'order' => 0,
+            ],
         ],
     ],
     'view_manager' => [
@@ -45,7 +59,7 @@ return [
         'not_found_template'       => 'error/404',
         'exception_template'       => 'error/index',
         'template_map' => [
-            'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
+            'layout/layout'           => __DIR__ . '/../../User/view/layout/user-layout.phtml',
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
@@ -53,5 +67,7 @@ return [
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
+        'title' => 'Electronic Records Clerk',
+        'version' => 'alpha',
     ],
 ];
