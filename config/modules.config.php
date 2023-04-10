@@ -6,6 +6,7 @@
  * This should be an array of module namespaces used in the application.
  */
 return [
+    'Laminas\Log',
     'Laminas\Db',
     'Laminas\Navigation',
     'Laminas\Mvc\Plugin\FilePrg',
@@ -27,4 +28,5 @@ return [
     'Components',
     'Settings',
     'User',
+    'Laminas\Box',
 ];

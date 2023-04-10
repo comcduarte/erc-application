@@ -1,68 +1,76 @@
 <?php
-/**
- * @var Laminas\View\Renderer\PhpRenderer $this
- */
+use Laminas\Form\Element\Button;
 ?>
-<div class="jumbotron">
-    <h1 class="display-4">Welcome to<br>Laminas MVC Skeleton Application</h1>
 
-    <p>
-        Congratulations! You have successfully installed the
-        <a href="https://github.com/laminas/laminas-mvc-skeleton" target="_blank">Laminas MVC Skeleton</a>.
-        This skeleton can serve as a simple starting point for you to begin
-        building your application on Laminas MVC.
-    </p>
+<?php
+$this->form->setAttribute('action', $this->url('application', ['action' => 'form']));
+$this->form->prepare();
 
-    <hr class="my-4">
+/**
+ * @var Button $button
+ */
+$button = $this->form->get('BUTTON');
+$url = $this->url('box', ['action' => 'refresh_metadata_templates']);
+$button->setAttribute('onclick', "window.open('$url')");
 
-    <a class="btn btn-primary btn-lg" href="https://github.com/laminas" target="_blank">
-        Check Laminas on GitHub &raquo;
-    </a>
-</div>
+echo $this->form()->openTag($form);
+?>
 
-<div class="card-deck">
-    <div class="card">
-        <h2 class="card-header">Follow Development</h2>
-        <div class="card-body">
-            <p>
-                Laminas Project is under active development. If you are
-                interested in following the development, you can check
-                <a href="https://getlaminas.org/blog/">Laminas dev blog</a>,
-                and <a href="https://github.com/issues?utf8=%E2%9C%93&amp;q=is:issue+org:laminas">Laminas issue tracker</a>
-                (link requires a GitHub account). This is a great resource
-                for staying up to date with the latest developments!
-            </p>
-
-            <a class="btn btn-primary" href="https://getlaminas.org/" target="_blank">Laminas Project Portal &raquo;</a>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2 class="card-header">Discover Modules</h2>
-        <div class="card-body">
-            <p>
-                Laminas MVC is a modular application.
-                You can find multiple compatible modules on packagist.
-            </p>
-
-            <a class="btn btn-primary" href="https://packagist.org/?tags=module~zf2~zendframework~zend%20framework~zend%20framework%202~zf3~zf~zend~laminas" target="_blank">
-                Explore Laminas Modules &raquo;
-            </a>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2 class="card-header">Help &amp; Support</h2>
-        <div class="card-body">
-            <p>
-                If you need any help or support while developing with Laminas,
-                you may reach us via <a href="https://laminas.dev/chat">chat</a> or
-                <a href="https://discourse.laminas.dev">forum</a>.
-                We'd love to hear any questions or feedback you may have
-                regarding any release.
-            </p>
-
-            <a class="btn btn-primary" href="https://laminas.dev/chat" target="_blank">Ping us on chat &raquo;</a>
+<div class="row">
+	<div class="col-md">
+        <div class="card mb-4">
+        	<div class="card-header d-flex justify-content-between">
+        		<div>
+        			<b>Metadata Templates</b>
+        		</div>
+        	</div>
+        	<div class="card-body">
+        		<?php echo $this->bsFormSelectButtonRow($this->form->get('TEMPLATE'), $this->form->get('BUTTON'), NULL, NULL, 'bsFormSelectButton'); ?>
+        		<?php echo $this->formRow($this->form->get('FILE_ID')); ?>
+        		<?php echo $this->formRow($this->form->get('SECURITY')); ?>
+        		<?php echo $this->formRow($this->form->get('SUBMIT')); ?>
+        	</div>
+        
         </div>
     </div>
 </div>
+
+<div class="row">
+	<div class="col-md">
+		<div class="card mb-4">
+			<div class="card-header d-flex justify-content-between">
+        		<div>
+        			<b>Uploaded Files</b>
+        		</div>
+        	</div>
+        	<div class="card-body">
+        		<ul>
+        			<?php foreach ($previews as $id => $name) : ?>
+        			<li onclick="document.getElementById('preview').src = i<?=$id?>; document.getElementById('FILE_ID').value = <?=$id?>;"><?php echo $name; ?></li>
+        			
+        			<?php endforeach; ?>
+        		</ul>
+        	</div>
+		</div>
+	</div>
+	<div class="col-md">
+		<div class="card mb-4">
+			<div class="card-header d-flex justify-content-between">
+        		<div>
+        			<b>Preview</b>
+        		</div>
+        	</div>
+        	<div class="card-body">
+        		<img src="" id="preview">
+        	</div>
+		</div>
+	</div>
+</div>
+
+<?php echo $this->form()->closeTag($this->form); ?>
+
+<script type="text/javascript">
+<?php foreach ($previews as $id => $name) : ?>
+var i<?=$id?> = "data:image/jpg;base64,<?=$images[$id]?>";
+<?php endforeach; ?>
+</script>
