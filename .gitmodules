@@ -10,3 +10,6 @@
 [submodule "module\\User"]
 	path = module\\User
 	url = git@github.com:comcduarte/com-user.git
+[submodule "module\\laminas-box"]
+	path = module\\laminas-box
+	url = git@github.com:comcduarte/laminas-box.git

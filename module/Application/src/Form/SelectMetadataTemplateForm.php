@@ -40,6 +40,7 @@ class SelectMetadataTemplateForm extends AbstractBaseForm
             'type' => Hidden::class,
             'attributes' => [
                 'id' => 'FILE_ID',
+                'required' => 'true',
             ],
         ]);
         

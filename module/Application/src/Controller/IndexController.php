@@ -5,6 +5,7 @@ namespace Application\Controller;
 
 use Application\Model\MetadataTemplateModel;
 use Application\Model\VisionPropertyModel;
+use Components\Form\UploadFileForm;
 use Components\Form\Element\DatabaseSelect;
 use Laminas\Box\API\AccessTokenAwareTrait;
 use Laminas\Box\API\Form\MetadataForm;
@@ -47,6 +48,14 @@ class IndexController extends AbstractActionController
         
         $view->setVariable('form', $this->select_metadata_template_form);
         
+        /******************************
+         * Upload Individual File Form
+         ******************************/
+        $upload_form = new UploadFileForm();
+        $upload_form->init();
+        $upload_form->setName('upload-file-form');
+        $view->setVariable('upload_form', $upload_form);
+        
         $folder = new Folder($this->getAccessToken());
         $folder->get_folder_information('170113907500');    //-- Test Folder 1 --//
         
@@ -68,11 +77,12 @@ class IndexController extends AbstractActionController
                 $file->request_desired_representation(Representation::TYPE_JPG,Representation::DIMENSION_320x320);
                 try {
                     $content = $file->download_file_representation();
+                    $images[$item['id']] = base64_encode($content->getContent());
                 } catch (Exception $e) {
                     $message = $e->getMessage();
                 }
                 
-                $images[$item['id']] = base64_encode($content->getContent());
+                
             }
         }
         $view->setVariable('previews', $previews);
@@ -139,6 +149,27 @@ class IndexController extends AbstractActionController
         if ($post['FILE_ID']) {
             $form->get('FILE_ID')->setValue($post['FILE_ID']);
             $form->remove('FILE');
+            
+            /**
+             * Retrieve readable representation of document
+             * 
+             * @var Items $items
+             * @var File $item
+             */
+            $file = new File($this->getAccessToken());
+            $file->list_all_representations();
+            $file->get_file_information($post['FILE_ID']);
+            $file->request_desired_representation(Representation::TYPE_JPG,Representation::DIMENSION_1024x1024);
+            try {
+                $content = $file->download_file_representation();
+            } catch (Exception $e) {
+                $message = $e->getMessage();
+            }
+            
+            $image = base64_encode($content->getContent());
+            
+            $view->setVariable('image', $image);
+            
         } else {
             $form->remove('FILE_ID');
         }

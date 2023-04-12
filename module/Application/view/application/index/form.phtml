@@ -18,4 +18,21 @@ echo $this->form()->openTag($form);
         <?php echo $this->form()->closeTag($this->form); ?>
         </div>
     </div>
+    <div class="col-md">
+		<div class="card mb-4">
+			<div class="card-header d-flex justify-content-between">
+        		<div>
+        			<b>Preview</b>
+        		</div>
+        	</div>
+        	<div class="card-body">
+        		<img src="" id="preview">
+        	</div>
+		</div>
+	</div>
 </div>
+
+<script type="text/javascript">
+document.getElementById('preview').src = "data:image/jpg;base64,<?=$image?>";
+
+</script>

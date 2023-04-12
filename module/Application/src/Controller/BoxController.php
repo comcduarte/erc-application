@@ -2,6 +2,7 @@
 namespace Application\Controller;
 
 use Application\Model\MetadataTemplateModel;
+use Components\Form\UploadFileForm;
 use Laminas\Box\API\AccessTokenAwareTrait;
 use Laminas\Box\API\Form\MetadataForm;
 use Laminas\Box\API\Resource\ClientError;
@@ -143,6 +144,14 @@ class BoxController extends AbstractActionController
                     $filename = $data['FILE']['tmp_name'];
                     $files = $upload->upload_file($attributes, $filename);
                     
+                    /**
+                     * Error
+                     */
+                    if ($files instanceof ClientError) {
+                        $this->logger->info($files->message);
+                        $this->flashMessenger()->addErrorMessage($files->message);
+                        return $this->redirectAction();
+                    }
                 } 
                 
                 /**
@@ -186,6 +195,51 @@ class BoxController extends AbstractActionController
         $this->redirectAction();
     }
 
+    public function fileuploadAction()
+    {
+        $request = $this->getRequest();
+        
+        if ($request->isPost()) {
+            $data = array_merge_recursive(
+                $request->getPost()->toArray(),
+                $request->getFiles()->toArray()
+                );
+
+            $form = new UploadFileForm();
+            $form->init();
+            $form->setData($data);
+            
+            if ($form->isValid()) {
+                
+                $folder = new Folder($this->getAccessToken());
+                $folder->get_folder_information('170113907500');    //-- Test Folder 1 --//
+                
+                if (isset($data['FILE'])) {
+                    $upload = new Upload($this->getAccessToken());
+                    $attributes = [
+                        'name' => $data['FILE']['name'],
+                        'parent' => [
+                            'id' => $folder->id,
+                        ],
+                    ];
+                    
+                    $upload->upload_file($attributes, $data['FILE']['tmp_name']);
+                }
+                
+                $this->logger->info('Successfully Uploaded File');
+            } else {
+                foreach ($form->getMessages() as $message) {
+                    if (is_array($message)) {
+                        $message = array_pop($message);
+                    }
+                    $this->logger->info($message);
+                    $this->flashMessenger()->addErrorMessage($message);
+                }
+            }
+        }
+        
+        return $this->redirectAction();
+    }
 }
 
 

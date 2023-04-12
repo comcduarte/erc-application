@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Application;
 
+use Application\Controller\Factory\ApplicationConfigControllerFactory;
 use Application\Controller\Factory\BoxControllerFactory;
 use Application\Controller\Factory\IndexControllerFactory;
 use Application\Controller\Factory\VisionControllerFactory;
@@ -69,6 +70,7 @@ return [
     ],
     'controllers' => [
         'factories' => [
+            Controller\ApplicationConfigController::class => ApplicationConfigControllerFactory::class,
             Controller\IndexController::class => IndexControllerFactory::class,
             Controller\BoxController::class => BoxControllerFactory::class,
             Controller\VisionController::class => VisionControllerFactory::class,

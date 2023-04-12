@@ -1,0 +1,23 @@
+<div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+    		<div class="card mb-4">
+            	<div class="card-header d-flex justify-content-between">
+            		<div>
+            			<b>Upload File</b>
+            		</div>
+            	</div>
+            	<div class="card-body">
+            		<?php 
+            		$form->setAttribute('action', $this->url('box', ['action' => 'fileupload']));
+            		$form->prepare();
+            		
+            		echo $this->form()->openTag($form);
+            		echo $this->formCollection($form);
+            		echo $this->form()->closeTag($form);
+            		?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

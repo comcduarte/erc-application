@@ -36,17 +36,20 @@ echo $this->form()->openTag($form);
 </div>
 
 <div class="row">
-	<div class="col-md">
+	<div class="col-md" style="max-height: 512px; overflow-y: auto;">
 		<div class="card mb-4">
 			<div class="card-header d-flex justify-content-between">
         		<div>
         			<b>Uploaded Files</b>
         		</div>
+        		<div>
+        			<a href="" class="btn btn-primary btn-rounded btn-sm" data-bs-toggle="modal" data-bs-target="#modalLoginForm">Add File</a>
+        		</div>
         	</div>
         	<div class="card-body">
         		<ul>
         			<?php foreach ($previews as $id => $name) : ?>
-        			<li onclick="document.getElementById('preview').src = i<?=$id?>; document.getElementById('FILE_ID').value = <?=$id?>;"><?php echo $name; ?></li>
+        			<li role="button" onclick="document.getElementById('preview').src = i<?=$id?>; document.getElementById('FILE_ID').value = <?=$id?>;"><?php echo $name; ?></li>
         			
         			<?php endforeach; ?>
         		</ul>
@@ -66,8 +69,9 @@ echo $this->form()->openTag($form);
 		</div>
 	</div>
 </div>
-
 <?php echo $this->form()->closeTag($this->form); ?>
+
+<?php echo $this->partial('form/upload-file-form.phtml', ['form' => $upload_form]); ?>
 
 <script type="text/javascript">
 <?php foreach ($previews as $id => $name) : ?>
