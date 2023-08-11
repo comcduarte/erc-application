@@ -41,6 +41,30 @@ return [
                     ],
                 ],
             ],
+            'erc' => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/erc',
+                    'defaults' => [
+                        'controller' => Controller\ApplicationConfigController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'config' => [
+                        'type' => Segment::class,
+                        'priority' => 100,
+                        'options' => [
+                            'route' => '/config[/:action]',
+                            'defaults' => [
+                                'action' => 'index',
+                                'controller' => Controller\ApplicationConfigController::class,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
             'box' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -101,6 +125,18 @@ return [
                 'label' => 'Home',
                 'route' => 'home',
                 'order' => 0,
+            ],
+            'settings' => [
+                'label' => 'Settings',
+                'pages' => [
+                    [
+                        'label' => 'ERC Settings',
+                        'route' => 'erc/config',
+                        'action' => 'index',
+                        'resource' => 'erc/config',
+                        'privilege' => 'index',
+                    ],
+                ],
             ],
         ],
     ],
