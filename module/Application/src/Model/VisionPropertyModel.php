@@ -4,7 +4,6 @@ namespace Application\Model;
 use Components\Model\AbstractBaseModel;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\Sql\Sql;
-use Laminas\Db\Sql\TableIdentifier;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\Sql\Predicate\Predicate;
 
@@ -101,8 +100,7 @@ class VisionPropertyModel extends AbstractBaseModel
         $this->public_attributes = array_diff(array_keys(get_object_vars($this)), $this->private_attributes);
         
         $this->setPrimaryKey('REM_PID');
-        $table = new TableIdentifier('REALMAST','REAL_PROP');
-        $this->setTableName($table);
+        $this->setTableName('REALMAST');
     }
     
     public function fetchAll(Predicate $predicate = null, array $order = [])

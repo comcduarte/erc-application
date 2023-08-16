@@ -21,7 +21,6 @@ return [
     'Laminas\Filter',
     'Laminas\Router',
     'Laminas\Validator',
-    'Laminas\ZendFrameworkBridge',
     'Laminas\DeveloperTools',
     'Application',
     'Acl',
