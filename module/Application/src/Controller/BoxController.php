@@ -237,5 +237,3 @@ class BoxController extends AbstractActionController
         return $this->redirectAction();
     }
 }
-
-
