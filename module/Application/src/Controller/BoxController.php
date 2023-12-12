@@ -119,14 +119,21 @@ class BoxController extends AbstractActionController
                     ],
                 ];
                 
-               
+                $exclude = [
+                    'SUBMIT' => $data['SUBMIT'],
+                    'SECURITY' => $data['SECURITY'],
+                    'template_key' => $data['template_key'],
+                ];
+                
                 if (isset($data['FILE_ID'])) {
                     $file = new File($this->getAccessToken());
-                    $response =  $file->copy_file($data['FILE_ID'], $attributes);
+                    $response = $file->copy_file($data['FILE_ID'], $attributes);
                     
                     switch (true) {
                         case ($response instanceof File):
                             $file->delete_file($data['FILE_ID']);
+                            $file = $response;
+                            $exclude['FILE_ID'] = $data['FILE_ID'];
                             break;
                         default:
                             /**
@@ -134,15 +141,16 @@ class BoxController extends AbstractActionController
                              */
                             $this->logger->info($response->message);
                             $this->flashMessenger()->addErrorMessage($response->message);
-                            break;
+                            return $this->redirectAction();
                     }
-                    return $this->redirectAction();
                 }
                 
-                 if (isset($data['FILE'])) {
+                if (isset($data['FILE'])) {
                     $upload = new Upload($this->getAccessToken());
                     $filename = $data['FILE']['tmp_name'];
                     $files = $upload->upload_file($attributes, $filename);
+                    $file = $files->entries['0'];
+                    $exclude['FILE'] = $data['FILE'];
                     
                     /**
                      * Error
@@ -154,22 +162,10 @@ class BoxController extends AbstractActionController
                     }
                 } 
                 
-                /**
-                 * 
-                 * @var \Laminas\Box\API\Resource\File $file
-                 */
-                $file = $files->entries['0'];
                 $template_key = $data['template_key'];
                 
-                $exclude = [
-                    'SUBMIT' => $data['SUBMIT'],
-                    'SECURITY' => $data['SECURITY'],
-                    'FILE' => $data['FILE'],
-                    'template_key' => $data['template_key'],
-                ];
                 $data = array_diff($data, $exclude);
                 $data['originalDocumentDate'] = date('c', strtotime($data['originalDocumentDate']));
-                
                 
                 $metadata_instance = new MetadataInstance($this->getAccessToken());
                 $retval = $metadata_instance->create_metadata_instance_on_file($file->id, $this->getAccessToken()->box_subject_type . '_' . $this->getAccessToken()->box_subject_id, $template_key, $data);
