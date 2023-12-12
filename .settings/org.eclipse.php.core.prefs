@@ -1,3 +1,5 @@
 eclipse.preferences.version=1
-phpVersion=php7.3
+include_path=0;/erc.dev.local
+phpVersion=php8.1
+useShortTags=true
 use_asp_tags_as_php=false
