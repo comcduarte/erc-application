@@ -74,7 +74,7 @@ class MetadataTemplateModel extends AbstractBaseModel
     
     public function update()
     {
-        foreach ($this->fields as $id => $objField) {
+        foreach ($this->fields as $objField) {
             $objField->update();
         }
         
@@ -84,7 +84,7 @@ class MetadataTemplateModel extends AbstractBaseModel
     
     public function delete()
     {
-        foreach ($this->fields as $id => $objField) {
+        foreach ($this->fields as $objField) {
             $objField->delete();
         }
         
