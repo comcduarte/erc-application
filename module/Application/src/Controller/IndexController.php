@@ -17,6 +17,8 @@ use Laminas\Db\Adapter\AdapterAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Exception;
+use User\Model\UserModel;
+use Laminas\Db\Sql\Where;
 
 class IndexController extends AbstractActionController
 {
@@ -140,6 +142,39 @@ class IndexController extends AbstractActionController
         
         $form->init();
         $form->remove('streetName');
+        $form->add($element, ['priority' => 1]);
+        
+        /**
+         * Create Application Specific Form Element for Author
+         */
+        $user = new UserModel($this->adapter);
+        
+        $select = new \Laminas\Db\Sql\Select();
+        $select->from($user->getTableName());
+        $select->columns(['UUID','LNAME','FNAME']);
+        
+        $where = new Where();
+        $where->equalTo('STATUS', $user::ACTIVE_STATUS)->and->isNotNull('LNAME');
+        
+        $select->where($where);
+        
+        $element = new DatabaseSelect();
+        $element->setDbAdapter($this->adapter);
+        $element->setDatabase_table($user->getTableName());
+        $element->setDatabase_id_column('UUID');
+        $element->setDatabase_value_columns(['LNAME', 'FNMAE']);
+        $element->setDatabase_object($select);
+        $element->setAttribute('class', 'form-select');
+        $element->setName('author');
+        $element->setAttributes([
+            'id' => 'author',
+            'required' => true,
+        ]);
+        $element->setOptions([
+            'label' => 'Author',
+        ]);
+        
+        $form->remove('author');
         $form->add($element, ['priority' => 1]);
         
         if ($post['FILE_ID']) {
