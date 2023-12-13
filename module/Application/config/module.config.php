@@ -126,6 +126,13 @@ return [
                 'route' => 'home',
                 'order' => 0,
             ],
+            'erc' => [
+                'label' => 'ERC',
+                'route' => 'application',
+                'action' => 'list',
+                'resource' => 'application',
+                'privilege' => 'list',
+            ],
             'settings' => [
                 'label' => 'Settings',
                 'pages' => [

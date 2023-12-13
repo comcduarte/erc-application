@@ -40,7 +40,7 @@ class IndexController extends AbstractActionController
      */
     public $logger;
     
-    public function indexAction()
+    public function listAction()
     {
         $view = new ViewModel();
         
@@ -206,6 +206,12 @@ class IndexController extends AbstractActionController
         }
         
         $view->setVariable('form', $form);
+        return $view;
+    }
+
+    public function indexAction()
+    {
+        $view = new ViewModel();
         return $view;
     }
 }
