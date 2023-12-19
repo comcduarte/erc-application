@@ -19,6 +19,10 @@ use Laminas\View\Model\ViewModel;
 use Settings\Model\SettingsModel;
 use Exception;
 use Laminas\Box\API\Resource\Collaborations;
+use Laminas\Box\API\Resource\User;
+use Laminas\Box\API\Role;
+use Laminas\Box\API\Resource\Collaboration;
+use Laminas\Box\API\Resource\ClientError;
 
 class ApplicationConfigController extends AbstractConfigController
 {
@@ -115,9 +119,27 @@ class ApplicationConfigController extends AbstractConfigController
             $settings->read(['MODULE' => 'ERC', 'SETTING' => 'APP_FOLDER_ID']);
             $settings->VALUE = $app_folder->id;
             $settings->update();
+        } else {
+            $settings->read(['MODULE' => 'ERC','SETTING' => 'APP_FOLDER_ID']);
+            $app_folder = $settings->VALUE;
         }
   
+        /**
+         * Add Collaborators
+         * @var User $user
+         */
+        $user = new User($this->access_token);
+        $user->login = 'christopher.duarte@middletownct.gov';
+                
+        $item = $folder->get_folder_information($app_folder);
+        $role = Role::CO_OWNER;
         
+        $collaboration = new Collaboration($this->access_token);
+        try {
+            // $result = $collaboration->create_collaboration($user, $item, $role);
+        } catch (ClientError $e) {
+            $this->flashmessenger->error($e->message);
+        }
         
         
         return ($view);
