@@ -13,6 +13,7 @@ use Laminas\Box\API\Resource\MetadataTemplate;
 use Laminas\Box\API\Resource\Upload;
 use Laminas\Db\Adapter\AdapterAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Settings\Model\SettingsModel;
 
 class BoxController extends AbstractActionController
 {
@@ -28,7 +29,7 @@ class BoxController extends AbstractActionController
     public function redirectAction() 
     {
         $this->logger->info('Entered Redirect Action');
-        return $this->redirect()->toRoute('home');
+        return $this->redirect()->toRoute('application', ['action' => 'list']);
     }
     
     public function refreshMetadataTemplatesAction()
@@ -90,9 +91,12 @@ class BoxController extends AbstractActionController
             $form->setData($data);
             
             if ($form->isValid()) {
+                $settings = new SettingsModel($this->adapter);
+                $settings->read(['MODULE' => 'ERC','SETTING' => 'APP_FOLDER_ID']);
+                $app_folder_id = $settings->VALUE;
             
                 $folder = new Folder($this->getAccessToken());
-                $folder->get_folder_information('170113907500');    //-- Test Folder 1 --//
+                $folder->get_folder_information($app_folder_id);
                 
                 /**
                  * Create the Street Folder if it doesn't exist.
@@ -206,9 +210,12 @@ class BoxController extends AbstractActionController
             $form->setData($data);
             
             if ($form->isValid()) {
+                $settings = new SettingsModel($this->adapter);
+                $settings->read(['MODULE' => 'ERC','SETTING' => 'APP_FOLDER_ID']);
+                $app_folder_id = $settings->VALUE;
                 
                 $folder = new Folder($this->getAccessToken());
-                $folder->get_folder_information('170113907500');    //-- Test Folder 1 --//
+                $folder->get_folder_information($app_folder_id);
                 
                 if (isset($data['FILE'])) {
                     $upload = new Upload($this->getAccessToken());

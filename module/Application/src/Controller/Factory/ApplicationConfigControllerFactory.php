@@ -12,6 +12,9 @@ class ApplicationConfigControllerFactory implements FactoryInterface
         $controller = new ApplicationConfigController();
         $adapter = $container->get('model-adapter');
         $controller->setDbAdapter($adapter);
+        
+        $access_token = $container->get('access-token');
+        $controller->setAccessToken($access_token);
         return $controller;
     }
 }

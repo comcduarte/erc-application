@@ -4,6 +4,8 @@ namespace Application\Controller;
 use Application\Model\VisionPropertyModel;
 use Components\Controller\AbstractConfigController;
 use Components\Form\UploadFileForm;
+use Laminas\Box\API\AccessTokenAwareTrait;
+use Laminas\Box\API\Resource\Folder;
 use Laminas\Db\Sql\Sql;
 use Laminas\Db\Sql\Ddl\CreateTable;
 use Laminas\Db\Sql\Ddl\DropTable;
@@ -14,10 +16,14 @@ use Laminas\Db\Sql\Ddl\Column\Varchar;
 use Laminas\Db\Sql\Ddl\Constraint\PrimaryKey;
 use Laminas\Validator\Db\RecordExists;
 use Laminas\View\Model\ViewModel;
+use Settings\Model\SettingsModel;
 use Exception;
+use Laminas\Box\API\Resource\Collaborations;
 
 class ApplicationConfigController extends AbstractConfigController
 {
+    use AccessTokenAwareTrait;
+    
     public function clearDatabase()
     {
         $sql = new Sql($this->adapter);
@@ -96,16 +102,21 @@ class ApplicationConfigController extends AbstractConfigController
         /******************************
          * Checks and Balances
          ******************************/
+        $folder = new Folder($this->getAccessToken());
+        $folder->get_folder_information('0');
+        $view->setVariable('folder', $folder->getResponse());
         
+        $settings = new SettingsModel($this->adapter);
+        $settings->read(['MODULE' => 'ERC', 'SETTING' => 'APP_FOLDER_NAME']);
         
-        /******************************
-         * Perform Functions
-         ******************************/
-        $importForm = new UploadFileForm('IMPORTVISION');
-        $importForm->init();
-        $importForm->addInputFilter();
-        
-        $view->setVariable('importForm', $importForm);
+        $items = $folder->list_items_in_folder('0');
+        if ($items->total_count == 0) {
+            $app_folder = $folder->create_folder('0', $settings->VALUE);
+            $settings->read(['MODULE' => 'ERC', 'SETTING' => 'APP_FOLDER_ID']);
+            $settings->VALUE = $app_folder->id;
+            $settings->update();
+        }
+  
         
         
         

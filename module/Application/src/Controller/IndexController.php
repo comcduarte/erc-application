@@ -19,6 +19,7 @@ use Laminas\View\Model\ViewModel;
 use Exception;
 use User\Model\UserModel;
 use Laminas\Db\Sql\Where;
+use Settings\Model\SettingsModel;
 
 class IndexController extends AbstractActionController
 {
@@ -54,8 +55,12 @@ class IndexController extends AbstractActionController
         $upload_form->setName('upload-file-form');
         $view->setVariable('upload_form', $upload_form);
         
+        $settings = new SettingsModel($this->adapter);
+        $settings->read(['MODULE' => 'ERC','SETTING' => 'APP_FOLDER_ID']);
+        $app_folder_id = $settings->VALUE;
+        
         $folder = new Folder($this->getAccessToken());
-        $folder->get_folder_information('170113907500');    //-- Test Folder 1 --//
+        $folder->get_folder_information($app_folder_id);
         
         /**
          *
